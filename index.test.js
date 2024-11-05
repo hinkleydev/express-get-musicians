@@ -106,3 +106,15 @@ describe("PUT /musicians/:id endpoint", function() {
 })
 
 // --- DELETE operations ---
+
+describe("DELETE /musicians/:id", function() {
+    const url = "/musicians/2";
+    it("returns 200 code", async function() {
+        const response = await request(app).delete(url);
+        expect(response.statusCode).toBe(200);
+    })
+    it("deletes the musician", async function() {
+        const response = await request(app).get(url);
+        expect(response.statusCode).toBe(404);
+    })
+})
