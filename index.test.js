@@ -27,3 +27,19 @@ describe('/musicians endpoint', function() {
         }
     })
 })
+
+describe("/musicians/:id endpoint", function() {
+    const url = "/musicians/1";
+    it("returns 200 code", async function() {
+        const response = await request(app).get(url);
+        expect(response.statusCode).toBe(200);
+    })
+    it("returns the correct data", async function() {
+        const response = await request(app).get(url);
+        const parsed = JSON.parse(response.text);
+        const original = await Musician.findByPk(1);
+        expect(parsed.name).toBe(original.name);
+        expect(parsed.instrument).toBe(parsed.instrument);
+        expect(parsed.bandId).toBe(original.bandId);
+    })
+})
