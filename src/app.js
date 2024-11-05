@@ -29,6 +29,10 @@ app.get("/musicians", async function(req, res) {
 // Return specific musician
 app.get("/musicians/:id", async function(req, res) {
     const musician = await Musician.findByPk(req.params.id);
+    if (musician == null) { // Doesn't exist
+        res.status(404).json({"message" : "Not found"})
+        return;
+    }
     res.json(musician);
 })
 
@@ -37,6 +41,10 @@ app.get("/musicians/:id", async function(req, res) {
 // Update specific musician
 app.put("/musicians/:id", async function(req, res) {
     const musician = await Musician.findByPk(req.params.id);
+    if (musician == null) { // Doesn't exist
+        res.status(404).json({"message" : "Not found"})
+        return;
+    }
     const name = req.body.name;
     const instrument = req.body.instrument;
     const bandId = req.body.bandId;
@@ -50,10 +58,14 @@ app.put("/musicians/:id", async function(req, res) {
 // Delete specific musician
 app.delete("/musicians/:id", async function(req, res) {
     const musician = await Musician.findByPk(req.params.id);
+    if (musician == null) { // Doesn't exist
+        res.status(404).json({"message" : "Not found"})
+        return;
+    }
     await musician.destroy();
     res.json({"message" : "Deleted"})
 })
 
-// -- END operations ---
+// --- END operations ---
 
 module.exports = app;
