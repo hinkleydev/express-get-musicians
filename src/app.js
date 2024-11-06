@@ -1,71 +1,8 @@
+const { musicianRouter } = require("../routes/index");
+
 const express = require("express");
 const app = express();
-const { Musician } = require("../models/index")
 
-// Body processing middleware
-app.use(express.urlencoded());
-app.use(express.json());
-
-// --- CREATE operations ---
-
-// Add new musician
-app.post("/musicians", async function(req, res) {
-    const name = req.body.name;
-    const instrument = req.body.instrument;
-    const bandId = req.body.bandId;
-    await Musician.create({name, instrument, bandId}) // Shorthand object syntax
-    const allMusicians = await Musician.findAll();
-    res.json(allMusicians);
-})
-
-// --- READ operations ---
-
-// Return all musicians 
-app.get("/musicians", async function(req, res) {
-    const allMusicians = await Musician.findAll();
-    res.json(allMusicians);
-})
-
-// Return specific musician
-app.get("/musicians/:id", async function(req, res) {
-    const musician = await Musician.findByPk(req.params.id);
-    if (musician == null) { // Doesn't exist
-        res.status(404).json({"message" : "Not found"})
-        return;
-    }
-    res.json(musician);
-})
-
-// --- UPDATE operations ---
-
-// Update specific musician
-app.put("/musicians/:id", async function(req, res) {
-    const musician = await Musician.findByPk(req.params.id);
-    if (musician == null) { // Doesn't exist
-        res.status(404).json({"message" : "Not found"})
-        return;
-    }
-    const name = req.body.name;
-    const instrument = req.body.instrument;
-    const bandId = req.body.bandId;
-    await musician.update({name, instrument, bandId}) // Shorthand object
-    const allMusicians = await Musician.findAll();
-    res.json(allMusicians);
-})
-
-// --- DELETE operations ---
-
-// Delete specific musician
-app.delete("/musicians/:id", async function(req, res) {
-    const musician = await Musician.findByPk(req.params.id);
-    if (musician == null) { // Doesn't exist
-        res.status(404).json({"message" : "Not found"})
-        return;
-    }
-    await musician.destroy();
-    res.json({"message" : "Deleted"})
-})
-
-// --- END operations ---
+app.use("/musicians", musicianRouter)
 
 module.exports = app;
