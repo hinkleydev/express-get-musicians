@@ -32,6 +32,18 @@ describe("POST /muscians endpoint", function() {
             expect(parsed[index].bandId).toBe(original[index].bandId)
         }
     })
+    it("doesn't create musicians with no name", async function() {
+        const response = await request(app)
+        .post(url)
+        .send({instrument: "Guitar"});
+        expect(response.status).toBe(400);
+    })
+    it("doesn't create musicians with no instrument", async function() {
+        const response = await request(app)
+        .post(url)
+        .send({name: "Kurt Cobain"});
+        expect(response.status).toBe(400);
+    })
 })
 
 // --- READ operations ---

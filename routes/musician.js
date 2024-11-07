@@ -1,15 +1,23 @@
 const express = require("express");
 const musicianRouter = express();
 const { Musician } = require("../models/index")
+const { check, validationResult } = require("express-validator");
 
-// Body processing middleware
-musicianRouter.use(express.urlencoded());
-musicianRouter.use(express.json());
+// --- Validators ---
+// These just check the strings aren't blank
+checkNotBlank = () => check(["name", "instrument"]).not().isEmpty().trim().withMessage("Both name and instrument must be included");
 
 // --- CREATE operations ---
 
 // Add new musician
-musicianRouter.post("/", async function(req, res) {
+musicianRouter.post("/",
+    [checkNotBlank()] // Validators
+    ,async function(req, res) {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        res.status(400).json( {error: errors.array()}) ;
+        return;
+    }
     const name = req.body.name;
     const instrument = req.body.instrument;
     const bandId = req.body.bandId;
