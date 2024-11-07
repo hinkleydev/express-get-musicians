@@ -47,7 +47,14 @@ musicianRouter.get("/:id", async function(req, res) {
 // --- UPDATE operations ---
 
 // Update specific musician
-musicianRouter.put("/:id", async function(req, res) {
+musicianRouter.put("/:id",
+    [checkNotBlank()] // Validators
+    ,async function(req, res) {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        res.status(400).json( {error: errors.array()}) ;
+        return;
+    }
     const musician = await Musician.findByPk(req.params.id);
     if (musician == null) { // Doesn't exist
         res.status(404).json({"message" : "Not found"})

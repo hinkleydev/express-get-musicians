@@ -115,6 +115,18 @@ describe("PUT /musicians/:id endpoint", function() {
         .send({name: "Another one", instrument: "Voice", bandId: null});
         expect(response.statusCode).toBe(404);
     })
+    it("doesn't update musicians with no name", async function() {
+        const response = await request(app)
+        .put(url + "/1")
+        .send({instrument: "Guitar"});
+        expect(response.status).toBe(400);
+    })
+    it("doesn't update musicians with no instrument", async function() {
+        const response = await request(app)
+        .put(url + "/1")
+        .send({name: "Kurt Cobain"});
+        expect(response.status).toBe(400);
+    })
 })
 
 // --- DELETE operations ---
