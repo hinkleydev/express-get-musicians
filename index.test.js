@@ -40,6 +40,18 @@ describe("POST /muscians endpoint", function() {
         .send({name: "Kurt Cobain"});
         expect(response.status).toBe(400);
     })
+    it("doesn't create musicians with a very short name", async function() {
+        const response = await request(app)
+        .post(url)
+        .send({name: "E", instrument: "Anything"});
+        expect(response.status).toBe(400);
+    })
+    it("doesn't create musicians with a very long name", async function() {
+        const response = await request(app)
+        .post(url)
+        .send({name: "The Australian Pink Floyd Show", instrument: "Anything"});
+        expect(response.status).toBe(400);
+    })
 })
 
 // --- READ operations ---
@@ -121,6 +133,18 @@ describe("PUT /musicians/:id endpoint", function() {
         const response = await request(app)
         .put(url + "/1")
         .send({name: "Kurt Cobain"});
+        expect(response.status).toBe(400);
+    })
+    it("doesn't update musicians with a very short name", async function() {
+        const response = await request(app)
+        .put(url + "/1")
+        .send({name: "E", instrument: "Anything"});
+        expect(response.status).toBe(400);
+    })
+    it("doesn't update musicians with a very long name", async function() {
+        const response = await request(app)
+        .put(url + "/1")
+        .send({name: "The Australian Pink Floyd Show", instrument: "Anything"});
         expect(response.status).toBe(400);
     })
 })

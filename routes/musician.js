@@ -4,14 +4,17 @@ const { Musician } = require("../models/index")
 const { check, validationResult } = require("express-validator");
 
 // --- Validators ---
-// These just check the strings aren't blank
+// This just checks the strings aren't blank
 checkNotBlank = () => check(["name", "instrument"]).not().isEmpty().trim().withMessage("Both name and instrument must be included");
+
+// This makes sure ths 
+checkNameLength = () => check("name").isByteLength({min: 2, max: 20}).withMessage("Name must be more than 2 characters and no more than 20");
 
 // --- CREATE operations ---
 
 // Add new musician
 musicianRouter.post("/",
-    [checkNotBlank()] // Validators
+    [checkNotBlank(), checkNameLength()] // Validators
     ,async function(req, res) {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -48,7 +51,7 @@ musicianRouter.get("/:id", async function(req, res) {
 
 // Update specific musician
 musicianRouter.put("/:id",
-    [checkNotBlank()] // Validators
+    [checkNotBlank(), checkNameLength()] // Validators
     ,async function(req, res) {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
